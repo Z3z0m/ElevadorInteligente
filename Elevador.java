@@ -1,37 +1,74 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
-public class Elevador {
+public class Elevador extends Thread{
     private int andarAtual;
-    private int capacidadeMaxima;
+    Semaphore sem;
     private List<Passageiro> passageiros;
+	int posY, posX, andarDesejado;
+	
+	
+	boolean isRunning = false;
     
-    public Elevador(int capacidadeMaxima) {
+    public Elevador(int andarDesejado) {
+    	this.andarDesejado = andarDesejado;
         this.andarAtual = 0;
-        this.capacidadeMaxima = capacidadeMaxima;
+        sem = new Semaphore(1);
         this.passageiros = new ArrayList<>();
     }
     
-    public synchronized void addPassageiro(Passageiro passageiro) throws InterruptedException {
-        while (passageiros.size() >= capacidadeMaxima) {
-            wait();
-        }
-        passageiros.add(passageiro);
-        notifyAll();
+    public void addPassageiro(Passageiro passageiro){
+    	try {
+			sem.acquire();
+	        passageiros.add(passageiro);
+	        passageiro.movePosX(this.posX);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally 
+    	{
+			sem.release();
+		}
     }
     
-    public synchronized void removerPassageiros() throws InterruptedException {
-        while (!passageiros.isEmpty()) {
-            wait();
+    private void removerPassageiros(){
+        if(!passageiros.isEmpty()) {
+        	passageiros.clear();
         }
-        notifyAll();
     }
-    
-    public synchronized int getAndarAtual() {
+   
+    public int getAndarAtual() {
         return andarAtual;
     }
     
-    public synchronized void setAndarAtual(int andarAtual) {
+    public void setAndarAtual(int andarAtual) {
         this.andarAtual = andarAtual;
     }
+    
+    public void getPassageirosNoAndarAtual() {
+    	
+    }
+    
+    private void move() {
+    	if(andarDesejado > posY) {
+    		posY += 1;
+    		System.out.println("andou para cima");
+    	}else if(andarDesejado < posY) {
+    		posY -= 1;
+    		System.out.println("andou para baixo");
+    	}
+    }
+    
+    public void begin(){
+    	this.start();
+    	isRunning = true;
+    }
+    
+    public void run() {
+    	while(isRunning != false) {
+    		move();
+    	}
+    }
+
 }
