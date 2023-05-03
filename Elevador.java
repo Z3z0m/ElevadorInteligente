@@ -1,21 +1,36 @@
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
+
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 public class Elevador extends Thread{
     private int andarAtual;
     Semaphore sem;
     private List<Passageiro> passageiros;
-	int posY, posX, andarDesejado;
-	
-	
+	int posY = 0 , posX, andarDesejado;
+	ImageIcon imgElevador, imgElevadorFechado, imgElevadorAberto;
+	private JPanel panel;
+	Predio predio;
 	boolean isRunning = false;
     
-    public Elevador(int andarDesejado) {
+    public Elevador(int andarDesejado, Predio predio) {
     	this.andarDesejado = andarDesejado;
-        this.andarAtual = 0;
+    	this.panel = panel;
         sem = new Semaphore(1);
         this.passageiros = new ArrayList<>();
+        
+        this.predio = predio;
+        
+        imgElevador = new ImageIcon(getClass().getResource("Image/Elevator.png"));
+        imgElevadorFechado = new ImageIcon(getClass().getResource("Image/ElevatorClosed.png"));
+        imgElevadorAberto = new ImageIcon(getClass().getResource("Image/ElevatorOpen.png"));
+    }
+    
+    public void draw(Graphics g) {
+    	imgElevadorFechado.paintIcon(panel, g, 50, posY);
     }
     
     public void addPassageiro(Passageiro passageiro){
@@ -51,13 +66,17 @@ public class Elevador extends Thread{
     }
     
     private void move() {
-    	if(andarDesejado > posY) {
-    		posY += 1;
-    		System.out.println("andou para cima");
-    	}else if(andarDesejado < posY) {
-    		posY -= 1;
-    		System.out.println("andou para baixo");
+    	while(isRunning = true){
+        	if(andarDesejado > posY) {
+        		posY += 1;
+        		predio.repintar();
+        	}else if(andarDesejado < posY) {
+        		posY -= 1;
+        		predio.repintar();
+        	}
+    	
     	}
+
     }
     
     public void begin(){
@@ -67,7 +86,7 @@ public class Elevador extends Thread{
     
     public void run() {
     	while(isRunning != false) {
-    		move();
+    		//move();
     	}
     }
 

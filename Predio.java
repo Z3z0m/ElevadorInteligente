@@ -12,18 +12,20 @@ public class Predio extends JPanel {
 	static Elevador elevador;
 	private List<Floor> floors = new ArrayList<>();
 	
-	int posYFLoor = -150;
+	public int[] posYFLoor;
 
 	public Predio() {
-		passageiro = new Passageiro(num_Passageiros);
+		posYFLoor = new int[num_Floors];
+		passageiro = new Passageiro(num_Passageiros, this);
 		passageiro.criarPassageiros(num_Passageiros);
 		for(int i = 0; i < num_Floors; i++) {
 			floors.add(new Floor(this));
 			floors.get(i).setPosY((i + 1) * -150);
 			floors.get(i).setListaDePassageiros(passageiro.getListaDePassageirosCriados());
 			System.out.println(floors.get(i).getListaDePassageiros());
+			posYFLoor[i] = floors.get(i).getPosY();
+			System.out.println(posYFLoor[i]);
 		}
-		
 		Begin();
 	}
 
@@ -33,17 +35,24 @@ public class Predio extends JPanel {
 		for(int i = 0; i < floors.size(); i++) {
 			floors.get(i).draw(g);
 		}
+		
+		elevador.draw(g);
 	}
 	
 	private void Begin() {
 
 		for(Passageiro p : passageiro.passageiro) {
 			p.start();
-			elevador = new Elevador(p.getAndarDesejado());
+			elevador = new Elevador(p.getAndarDesejado(), this);
 		}
 		
 		elevador.begin();
+	}
 	
-		
-		}
+
+	
+	public void repintar() {
+		repaint();
+		revalidate();
+	}
 }

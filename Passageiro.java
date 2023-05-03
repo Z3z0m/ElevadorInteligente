@@ -8,13 +8,15 @@ public class Passageiro extends Thread{
     private int andarDesejado;
     Passageiro passageiro[];
     Floor floor;
+    Predio predio;
     
     private int posX, posY;
     
     private List<Passageiro> passageirosCriados;
     
-    public Passageiro(int num_Passageiros) {
-        this.andarDesejado = ThreadLocalRandom.current().nextInt(-10,10);
+    public Passageiro(int num_Passageiros, Predio predio) {
+    	this.predio = predio;
+        this.andarDesejado = ThreadLocalRandom.current().nextInt(-1, 1);
         this.num_Passageiros = num_Passageiros;
 
         this.passageirosCriados = new ArrayList<>();
@@ -34,7 +36,7 @@ public class Passageiro extends Thread{
     	this.passageiro = new Passageiro[n_passageiros];
     	
 		for(int i = 0; i < n_passageiros; i++) {
-			passageiro[i] = new Passageiro(this.num_Passageiros);
+			passageiro[i] = new Passageiro(this.num_Passageiros, predio);
 			System.out.println("passageiro " + i + " ");
 			passageirosCriados.add(passageiro[i]);
 			}

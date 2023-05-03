@@ -22,6 +22,10 @@ public class Floor {
 		this.posY = posY;
 	}
 	
+	public int getPosY() {
+		return posY;
+	}
+	
 	public void draw(Graphics g) {
 		imgFloor.paintIcon(panel, g, 50, posY);
 	}
