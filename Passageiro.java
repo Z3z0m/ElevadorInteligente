@@ -16,7 +16,7 @@ public class Passageiro extends Thread{
     public Passageiro(int num_Passageiros) {
         this.andarDesejado = ThreadLocalRandom.current().nextInt(-10,10);
         this.num_Passageiros = num_Passageiros;
-        this.floor = new Floor();
+
         this.passageirosCriados = new ArrayList<>();
         
     }
@@ -46,10 +46,10 @@ public class Passageiro extends Thread{
     
     public void movePosX(int posXDestino) {
     	while(this.posX != posXDestino) {
+    		
     		if(this.posX > posXDestino) {
     			this.posX += 1;
-    		}else
-    		{
+    		}else {
     			this.posX -= 1;
     		}
     	}

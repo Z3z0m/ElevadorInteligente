@@ -1,26 +1,38 @@
 import javax.swing.JPanel;
+import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Predio extends JPanel {
 	
 	int num_Passageiros = 10;
-	static int num_Floors = 2;
+	static int num_Floors = 4;
 	static Passageiro passageiro;
 	static Elevador elevador;
-	static Floor floor[] = new Floor[num_Floors];
+	private List<Floor> floors = new ArrayList<>();
 	
+	int posYFLoor = -150;
+
 	public Predio() {
 		passageiro = new Passageiro(num_Passageiros);
 		passageiro.criarPassageiros(num_Passageiros);
 		for(int i = 0; i < num_Floors; i++) {
-			floor[i] = new Floor();
-			floor[i].setListaDePassageiros(passageiro.getListaDePassageirosCriados());
-			System.out.println(floor[i].getListaDePassageiros());
+			floors.add(new Floor(this));
+			floors.get(i).setPosY((i + 1) * -150);
+			floors.get(i).setListaDePassageiros(passageiro.getListaDePassageirosCriados());
+			System.out.println(floors.get(i).getListaDePassageiros());
 		}
+		
 		Begin();
 	}
 
-	private void Draw() {
+	public void paint(Graphics g) {
+		super.paint(g);
 		
+		for(int i = 0; i < floors.size(); i++) {
+			floors.get(i).draw(g);
+		}
 	}
 	
 	private void Begin() {
@@ -29,8 +41,6 @@ public class Predio extends JPanel {
 			p.start();
 			elevador = new Elevador(p.getAndarDesejado());
 		}
-		
-
 		
 		elevador.begin();
 	
